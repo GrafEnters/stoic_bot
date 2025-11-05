@@ -1,11 +1,11 @@
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node';
+import {Low} from 'lowdb';
+import {JSONFile} from 'lowdb/node';
 
 const adapter = new JSONFile('./data/results.json');
-const db = new Low(adapter,{ results: [] } );
+const db = new Low(adapter, {results: []});
 
 await db.read();
-db.data ||= { results: [] };
+db.data ||= {results: []};
 
 export function getWinnerStats() {
     const count = {};
@@ -28,12 +28,4 @@ export function getAnswerStats() {
         }
     }
     return count;
-}
-
-export function printAnalytics() {
-    console.log('📊 Частота побед философов:');
-    console.table(getWinnerStats());
-
-    console.log('\n📊 Популярность вариантов ответов:');
-    console.table(getAnswerStats());
 }
