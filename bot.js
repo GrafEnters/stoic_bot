@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import {getWinnerStats, getAnswerStats, getRandomCustomAnswers} from './analytics.js';
 import {questions, sendQuestion, showResult, startQuiz} from "./quiz.js";
 import {existsSync, writeFileSync} from "node:fs";
+import {startKeepAliveServer} from "./keepalive.js";
 
 dotenv.config();
 
@@ -210,5 +211,6 @@ bot.command('stats', (ctx) => {
 });
 
 // Запуск бота
-await bot.launch();
+bot.launch();
+startKeepAliveServer();
 console.log('✅ Бот запущен. Жми /start в Telegram.');
