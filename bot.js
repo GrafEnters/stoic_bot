@@ -29,19 +29,24 @@ export const sessions = new Map();
 
 // Старт
 bot.start((ctx) => {
-    ctx.reply('Привет! 🦒\nХочешь узнать, какой ты философ?', Markup.inlineKeyboard([[Markup.button.callback('Да, поехали!', 'start_quiz')], [Markup.button.callback('Я уже философ.', 'already')], [Markup.button.callback('Покажи статистику!', 'show_stats')]]));
+    ctx.replyWithPhoto({source: 'data/avatars/Hello.jpg'}, {
+        caption: 'Привет! 🦒\nХочешь узнать, какой ты философ?',
+        reply_markup: Markup.inlineKeyboard(
+            [[Markup.button.callback('Да, поехали!', 'start_quiz')],
+                [Markup.button.callback('Я уже философ.', 'already')],
+                [Markup.button.callback('Покажи статистику!', 'show_stats')]]).reply_markup
+    });
 });
 
-bot.action('already', (ctx) => {
+bot.action('already', async (ctx) => {
     ctx.answerCbQuery();
     ctx.reply('Тем интереснее — сверим показания!');
-    startQuiz(ctx);
+    await startQuiz(ctx);
 });
 
-bot.action('start_quiz', (ctx) => {
-
+bot.action('start_quiz', async (ctx) => {
     ctx.answerCbQuery();
-    startQuiz(ctx);
+    await startQuiz(ctx);
 });
 
 
@@ -83,11 +88,12 @@ bot.on('callback_query', async (ctx) => {
     const answer = ctx.callbackQuery.data;
 
     const choice = q.options.find(o => o.value === answer);
-    
+
     if (choice && choice.text.includes('Свой вариант')) {
         session.waitingCustomAnswer = true;
         session.currentQuestionId = q.id;
         session.currentAnswerValue = answer;
+        session.currentQuestionMessageId = ctx.callbackQuery.message.message_id;
         if (choice.philosophers) {
             session.currentAnswerPhilosophers = choice.philosophers;
         }
@@ -107,8 +113,16 @@ bot.on('callback_query', async (ctx) => {
     session.index++;
     ctx.answerCbQuery();
 
+    setTimeout(async () => {
+        try {
+            await ctx.deleteMessage(ctx.callbackQuery.message.message_id);
+        } catch (e) {
+            console.log('Не удалось удалить сообщение:', e);
+        }
+    }, 1500);
+
     if (session.index < questions.length) {
-        sendQuestion(ctx);
+        await sendQuestion(ctx);
     } else {
         var dbRecord = await showResult(ctx);
         // Сохраняем результат в базу
@@ -139,14 +153,25 @@ bot.on('text', async (ctx) => {
     }
 
     session.waitingCustomAnswer = false;
+
+    if (session.currentQuestionMessageId) {
+        setTimeout(async () => {
+            try {
+                await ctx.deleteMessage(session.currentQuestionMessageId);
+            } catch (e) {
+                console.log('Не удалось удалить сообщение:', e);
+            }
+        }, 1500);
+    }
     delete session.currentQuestionId;
     delete session.currentAnswerValue;
     delete session.currentAnswerPhilosophers;
+    delete session.currentQuestionMessageId;
 
     session.index++;
 
     if (session.index < questions.length) {
-        sendQuestion(ctx);
+        await sendQuestion(ctx);
     } else {
         var dbRecord = await showResult(ctx);
         db.data.results.push(dbRecord);

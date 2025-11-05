@@ -869,6 +869,116 @@
         }
       ],
       "date": "2025-11-05T02:10:09.691Z"
+    },
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Сократ",
+      "scores": {
+        "Сенека": 2,
+        "Эпикур": 2,
+        "Сократ": 3,
+        "Фуко": 2,
+        "Камю": 2,
+        "Ницше": 3,
+        "Конфуций": 2,
+        "Диоген": 0,
+        "Диоген_plus": 0,
+        "Диоген_simple": 1
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "B"
+        },
+        {
+          "questionId": 2,
+          "value": "C"
+        },
+        {
+          "questionId": 3,
+          "value": "C"
+        },
+        {
+          "questionId": 4,
+          "value": "C"
+        },
+        {
+          "questionId": 5,
+          "value": "C"
+        },
+        {
+          "questionId": 6,
+          "value": "D"
+        },
+        {
+          "questionId": 7,
+          "value": "B"
+        },
+        {
+          "questionId": 8,
+          "value": "B"
+        },
+        {
+          "questionId": 9,
+          "value": "A"
+        }
+      ],
+      "date": "2025-11-05T02:20:25.459Z"
+    },
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Мишель Фуко",
+      "scores": {
+        "Сенека": 2,
+        "Эпикур": 1,
+        "Сократ": 4,
+        "Фуко": 5,
+        "Камю": 1,
+        "Ницше": 1,
+        "Конфуций": 2,
+        "Диоген": 0,
+        "Диоген_plus": 0,
+        "Диоген_simple": 1
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "B"
+        },
+        {
+          "questionId": 2,
+          "value": "C"
+        },
+        {
+          "questionId": 3,
+          "value": "B"
+        },
+        {
+          "questionId": 4,
+          "value": "C"
+        },
+        {
+          "questionId": 5,
+          "value": "D"
+        },
+        {
+          "questionId": 6,
+          "value": "D"
+        },
+        {
+          "questionId": 7,
+          "value": "D"
+        },
+        {
+          "questionId": 8,
+          "value": "C"
+        },
+        {
+          "questionId": 9,
+          "value": "A"
+        }
+      ],
+      "date": "2025-11-05T02:21:54.992Z"
     }
   ]
 }

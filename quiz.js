@@ -7,7 +7,7 @@ export const philosophers = JSON.parse(readFileSync('./data/philosophers.json', 
 
 
 // Запуск квиза
-export function startQuiz(ctx) {
+export async function startQuiz(ctx) {
     const scores = {};
     for (const p of philosophers) scores[p.id] = 0;
 
@@ -15,16 +15,17 @@ export function startQuiz(ctx) {
         index: 0, scores, answers: []
     });
 
-    sendQuestion(ctx);
+    await sendQuestion(ctx);
 }
 
 
 // Отправка вопроса
-export function sendQuestion(ctx) {
+export async function sendQuestion(ctx) {
     const session = sessions.get(ctx.chat.id);
     const q = questions[session.index];
 
-    ctx.reply(`Вопрос ${session.index + 1}/${questions.length}\n${q.question}`, Markup.inlineKeyboard(q.options.map(opt => [Markup.button.callback(opt.text, opt.value)])));
+    const message = await ctx.reply(`Вопрос ${session.index + 1}/${questions.length}\n${q.question}`, Markup.inlineKeyboard(q.options.map(opt => [Markup.button.callback(opt.text, opt.value)])));
+    session.lastQuestionMessageId = message.message_id;
 }
 
 export async function showResult(ctx) {
