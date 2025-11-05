@@ -36,7 +36,7 @@ export async function showResult(ctx) {
         session.scores["Диоген"] += session.scores["Диоген_plus"] * 1.5;
         session.scores["Диоген_plus"] = 0;
     }
-    
+
     const sorted = Object.entries(session.scores).sort((a, b) => b[1] - a[1]);
     const top = sorted[0][0];
     const philosopher = philosophers.find(p => p.id === top);
@@ -55,7 +55,9 @@ ${philosopher.description}
     await ctx.replyWithPhoto({source: philosopher.avatar}, {
         caption: resultText,
     });
-    await ctx.reply('Привет! 🦒\nХочешь узнать статистику?', Markup.inlineKeyboard([Markup.button.callback('Да, покажи!', 'show_stats')]));
+    await ctx.reply('Хочешь узнать статистику?', Markup.inlineKeyboard(
+        [Markup.button.callback('Да, покажи!', 'show_stats'),
+            Markup.button.callback('Нет, хочу пройти тест ещё раз!', 'start_quiz')]));
 
     return {
         user: ctx.from.username || ctx.from.id,
