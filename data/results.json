@@ -1,0 +1,382 @@
+{
+  "results": [
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Фридрих Ницше",
+      "scores": {
+        "Сенека": 1,
+        "Эпикур": 3,
+        "Сократ": 2,
+        "Фуко": 3,
+        "Камю": 3,
+        "Ницше": 4,
+        "Конфуций": 1,
+        "Диоген_simple": 1,
+        "Диоген_plus": 0
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "C"
+        },
+        {
+          "questionId": 2,
+          "value": "D"
+        },
+        {
+          "questionId": 3,
+          "value": "C"
+        },
+        {
+          "questionId": 4,
+          "value": "C"
+        },
+        {
+          "questionId": 5,
+          "value": "D"
+        },
+        {
+          "questionId": 6,
+          "value": "C"
+        },
+        {
+          "questionId": 7,
+          "value": "C"
+        },
+        {
+          "questionId": 8,
+          "value": "C"
+        },
+        {
+          "questionId": 9,
+          "value": "B"
+        }
+      ],
+      "date": "2025-10-28T12:25:48.743Z"
+    },
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Фридрих Ницше",
+      "scores": {
+        "Сенека": 2,
+        "Эпикур": 0,
+        "Сократ": 1,
+        "Фуко": 3,
+        "Камю": 2,
+        "Ницше": 4,
+        "Конфуций": 4,
+        "Диоген_simple": 2,
+        "Диоген_plus": 0
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "A"
+        },
+        {
+          "questionId": 2,
+          "value": "B"
+        },
+        {
+          "questionId": 3,
+          "value": "A"
+        },
+        {
+          "questionId": 4,
+          "value": "A"
+        },
+        {
+          "questionId": 5,
+          "value": "B"
+        },
+        {
+          "questionId": 6,
+          "value": "B"
+        },
+        {
+          "questionId": 7,
+          "value": "B"
+        },
+        {
+          "questionId": 8,
+          "value": "B"
+        },
+        {
+          "questionId": 9,
+          "value": "A"
+        }
+      ],
+      "date": "2025-10-28T12:30:32.150Z"
+    },
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Сократ",
+      "scores": {
+        "Сенека": 1,
+        "Эпикур": 3,
+        "Сократ": 4,
+        "Фуко": 4,
+        "Камю": 2,
+        "Ницше": 2,
+        "Конфуций": 2,
+        "Диоген_simple": 0,
+        "Диоген_plus": 0
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "C"
+        },
+        {
+          "questionId": 2,
+          "value": "D"
+        },
+        {
+          "questionId": 3,
+          "value": "C"
+        },
+        {
+          "questionId": 4,
+          "value": "C"
+        },
+        {
+          "questionId": 5,
+          "value": "D"
+        },
+        {
+          "questionId": 6,
+          "value": "D"
+        },
+        {
+          "questionId": 7,
+          "value": "D"
+        },
+        {
+          "questionId": 8,
+          "value": "D"
+        },
+        {
+          "questionId": 9,
+          "value": "C"
+        }
+      ],
+      "date": "2025-10-28T12:34:45.203Z"
+    },
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Сенека",
+      "scores": {
+        "Сенека": 7,
+        "Эпикур": 2,
+        "Сократ": 1,
+        "Фуко": 2,
+        "Камю": 1,
+        "Ницше": 0,
+        "Конфуций": 5,
+        "Диоген_simple": 0,
+        "Диоген_plus": 0
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "A"
+        },
+        {
+          "questionId": 2,
+          "value": "A"
+        },
+        {
+          "questionId": 3,
+          "value": "A"
+        },
+        {
+          "questionId": 4,
+          "value": "A"
+        },
+        {
+          "questionId": 5,
+          "value": "A"
+        },
+        {
+          "questionId": 6,
+          "value": "A"
+        },
+        {
+          "questionId": 7,
+          "value": "A"
+        },
+        {
+          "questionId": 8,
+          "value": "A"
+        },
+        {
+          "questionId": 9,
+          "value": "A"
+        }
+      ],
+      "date": "2025-10-28T12:38:37.507Z"
+    },
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Сократ",
+      "scores": {
+        "Сенека": 1,
+        "Эпикур": 3,
+        "Сократ": 4,
+        "Фуко": 4,
+        "Камю": 2,
+        "Ницше": 2,
+        "Конфуций": 2,
+        "Диоген_simple": 0,
+        "Диоген_plus": 0
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "C"
+        },
+        {
+          "questionId": 2,
+          "value": "D"
+        },
+        {
+          "questionId": 3,
+          "value": "C"
+        },
+        {
+          "questionId": 4,
+          "value": "C"
+        },
+        {
+          "questionId": 5,
+          "value": "D"
+        },
+        {
+          "questionId": 6,
+          "value": "D"
+        },
+        {
+          "questionId": 7,
+          "value": "D"
+        },
+        {
+          "questionId": 8,
+          "value": "D"
+        },
+        {
+          "questionId": 9,
+          "value": "C"
+        }
+      ],
+      "date": "2025-10-28T12:40:47.857Z"
+    },
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Альбер Камю",
+      "scores": {
+        "Сенека": 2,
+        "Эпикур": 0,
+        "Сократ": 1,
+        "Фуко": 2,
+        "Камю": 5,
+        "Ницше": 4,
+        "Конфуций": 3,
+        "Диоген_simple": 1,
+        "Диоген_plus": 0
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "C"
+        },
+        {
+          "questionId": 2,
+          "value": "A"
+        },
+        {
+          "questionId": 3,
+          "value": "A"
+        },
+        {
+          "questionId": 4,
+          "value": "B"
+        },
+        {
+          "questionId": 5,
+          "value": "B"
+        },
+        {
+          "questionId": 6,
+          "value": "B"
+        },
+        {
+          "questionId": 7,
+          "value": "B"
+        },
+        {
+          "questionId": 8,
+          "value": "B"
+        },
+        {
+          "questionId": 9,
+          "value": "A"
+        }
+      ],
+      "date": "2025-10-28T12:45:05.465Z"
+    },
+    {
+      "user": "Graf_Enters",
+      "topPhilosopher": "Альбер Камю",
+      "scores": {
+        "Сенека": 0,
+        "Эпикур": 2,
+        "Сократ": 3,
+        "Фуко": 2,
+        "Камю": 5,
+        "Ницше": 3,
+        "Конфуций": 0,
+        "Диоген_simple": 2,
+        "Диоген_plus": 0
+      },
+      "answers": [
+        {
+          "questionId": 1,
+          "value": "B"
+        },
+        {
+          "questionId": 2,
+          "value": "C"
+        },
+        {
+          "questionId": 3,
+          "value": "B"
+        },
+        {
+          "questionId": 4,
+          "value": "B"
+        },
+        {
+          "questionId": 5,
+          "value": "C"
+        },
+        {
+          "questionId": 6,
+          "value": "C"
+        },
+        {
+          "questionId": 7,
+          "value": "C"
+        },
+        {
+          "questionId": 8,
+          "value": "C"
+        },
+        {
+          "questionId": 9,
+          "value": "B"
+        }
+      ],
+      "date": "2025-10-28T12:47:28.425Z"
+    }
+  ]
+}
