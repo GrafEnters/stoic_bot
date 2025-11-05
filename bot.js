@@ -2,7 +2,7 @@ import {Telegraf, Markup} from 'telegraf';
 import {Low} from 'lowdb';
 import {JSONFile} from 'lowdb/node';
 import dotenv from 'dotenv';
-import {getWinnerStats, getAnswerStats, printAnalytics} from './analytics.js';
+import {getWinnerStats, getAnswerStats, getRandomCustomAnswers} from './analytics.js';
 import {questions, sendQuestion, showResult, startQuiz} from "./quiz.js";
 import {existsSync, writeFileSync} from "node:fs";
 
@@ -50,6 +50,7 @@ bot.action('show_stats', (ctx) => {
 
     const winners = getWinnerStats();
     const answers = getAnswerStats();
+    const customAnswers = getRandomCustomAnswers(3);
 
     let msg = '📊 Статистика по всем прохождениям:\n\n';
     msg += '🏆 Победители:\n';
@@ -60,6 +61,13 @@ bot.action('show_stats', (ctx) => {
     msg += '\n✅ Популярность ответов:\n';
     for (const [key, c] of Object.entries(answers)) {
         msg += `${key}: ${c}\n`;
+    }
+
+    if (customAnswers.length > 0) {
+        msg += '\n3 случайных необычных ответа:\n';
+        for (const item of customAnswers) {
+            msg += `- ${item.question}: ${item.answer}\n`;
+        }
     }
 
     ctx.reply(msg);
@@ -74,10 +82,22 @@ bot.on('callback_query', async (ctx) => {
     const q = questions[session.index];
     const answer = ctx.callbackQuery.data;
 
-    // Сохраняем выбранный вариант
+    const choice = q.options.find(o => o.value === answer);
+    
+    if (choice && choice.text.includes('Свой вариант')) {
+        session.waitingCustomAnswer = true;
+        session.currentQuestionId = q.id;
+        session.currentAnswerValue = answer;
+        if (choice.philosophers) {
+            session.currentAnswerPhilosophers = choice.philosophers;
+        }
+        ctx.answerCbQuery();
+        ctx.reply('Напиши свой вариант ответа сообщением:');
+        return;
+    }
+
     session.answers.push({questionId: q.id, value: answer});
 
-    const choice = q.options.find(o => o.value === answer);
     if (choice) {
         for (const ph of choice.philosophers) {
             session.scores[ph] = (session.scores[ph] || 0) + 1;
@@ -100,11 +120,48 @@ bot.on('callback_query', async (ctx) => {
 });
 
 
+// Обработка текстовых ответов (для "Свой вариант")
+bot.on('text', async (ctx) => {
+    const session = sessions.get(ctx.chat.id);
+    if (!session || !session.waitingCustomAnswer) return;
+
+    const customText = ctx.message.text;
+    session.answers.push({
+        questionId: session.currentQuestionId,
+        value: session.currentAnswerValue,
+        customText: customText
+    });
+
+    if (session.currentAnswerPhilosophers) {
+        for (const ph of session.currentAnswerPhilosophers) {
+            session.scores[ph] = (session.scores[ph] || 0) + 1;
+        }
+    }
+
+    session.waitingCustomAnswer = false;
+    delete session.currentQuestionId;
+    delete session.currentAnswerValue;
+    delete session.currentAnswerPhilosophers;
+
+    session.index++;
+
+    if (session.index < questions.length) {
+        sendQuestion(ctx);
+    } else {
+        var dbRecord = await showResult(ctx);
+        db.data.results.push(dbRecord);
+        await db.write();
+
+        sessions.delete(ctx.chat.id);
+    }
+});
+
 // Команда /stats
 bot.command('stats', (ctx) => {
     console.log('Пользователь вызвал stats', ctx.from.username);
     const winners = getWinnerStats();
     const answers = getAnswerStats();
+    const customAnswers = getRandomCustomAnswers(3);
 
     let msg = '📊 Статистика по всем прохождениям:\n\n';
     msg += '🏆 Победители:\n';
@@ -115,6 +172,13 @@ bot.command('stats', (ctx) => {
     msg += '\n✅ Популярность ответов:\n';
     for (const [key, c] of Object.entries(answers)) {
         msg += `${key}: ${c}\n`;
+    }
+
+    if (customAnswers.length > 0) {
+        msg += '\n3 случайных необычных ответа:\n';
+        for (const item of customAnswers) {
+            msg += `- ${item.question}: ${item.answer}\n`;
+        }
     }
 
     ctx.reply(msg);

@@ -31,6 +31,11 @@ export async function showResult(ctx) {
     ctx.reply('Готово!\nСекундочку... сверяю твои ответы с древними свитками 🤓');
 
     const session = sessions.get(ctx.chat.id);
+    if (session.scores["Диоген_plus"] > 0) {
+        session.scores["Диоген"] += session.scores["Диоген_plus"] * 1.5;
+        session.scores["Диоген_plus"] = 0;
+    }
+    
     const sorted = Object.entries(session.scores).sort((a, b) => b[1] - a[1]);
     const top = sorted[0][0];
     const philosopher = philosophers.find(p => p.id === top);
@@ -50,7 +55,7 @@ ${philosopher.description}
         caption: resultText,
     });
     await ctx.reply('Привет! 🦒\nХочешь узнать статистику?', Markup.inlineKeyboard([Markup.button.callback('Да, покажи!', 'show_stats')]));
-    
+
     return {
         user: ctx.from.username || ctx.from.id,
         topPhilosopher: philosopher.name,
