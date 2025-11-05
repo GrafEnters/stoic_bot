@@ -30,6 +30,8 @@ export const sessions = new Map();
 
 // Старт
 bot.start((ctx) => {
+
+    console.log('✅ Бот start.');
     ctx.replyWithPhoto({source: 'data/avatars/Hello.jpg'}, {
         caption: 'Привет! 🦒\nХочешь узнать, какой ты философ?',
         reply_markup: Markup.inlineKeyboard(
