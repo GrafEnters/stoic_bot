@@ -57,7 +57,7 @@ ${philosopher.description}
     });
     await ctx.reply('Хочешь узнать статистику?', Markup.inlineKeyboard(
         [Markup.button.callback('Да, покажи!', 'show_stats'),
-            Markup.button.callback('Нет, хочу пройти тест ещё раз!', 'start_quiz')]));
+            Markup.button.callback('Хочу пройти ещё!', 'start_quiz')]));
 
     return {
         user: ctx.from.username || ctx.from.id,
