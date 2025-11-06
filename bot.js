@@ -212,7 +212,94 @@ bot.command('stats', (ctx) => {
     ctx.reply(msg);
 });
 
-// Запуск бота
-bot.launch();
-startKeepAliveServer();
-console.log('✅ Бот запущен. Жми /start в Telegram.');
+bot.catch((err, ctx) => {
+    console.error('Ошибка в обработчике:', err);
+    try {
+        ctx.reply('Произошла ошибка. Попробуйте позже.');
+    } catch (e) {
+        console.error('Не удалось отправить сообщение об ошибке:', e);
+    }
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Необработанное отклонение промиса:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Необработанное исключение:', error);
+});
+
+process.once('SIGINT', () => gracefulShutdown('SIGINT'));
+process.once('SIGTERM', () => gracefulShutdown('SIGTERM'));
+
+async function gracefulShutdown(signal) {
+    console.log(`Получен сигнал ${signal}, останавливаю бота...`);
+    try {
+        await bot.stop(signal);
+        console.log('✅ Бот остановлен');
+        process.exit(0);
+    } catch (err) {
+        console.error('Ошибка при остановке бота:', err);
+        process.exit(1);
+    }
+}
+
+let isRunning = false;
+let reconnectTimeout = null;
+let healthCheckInterval = null;
+
+async function startBot() {
+    if (isRunning) {
+        console.log('Бот уже запущен, пропускаю повторный запуск');
+        return;
+    }
+
+    try {
+        await bot.launch();
+        isRunning = true;
+        console.log('✅ Бот запущен. Жми /start в Telegram.');
+        
+        startKeepAliveServer();
+        if (!healthCheckInterval) {
+            startHealthCheck();
+        }
+    } catch (err) {
+        console.error('Ошибка при запуске бота:', err);
+        isRunning = false;
+        if (reconnectTimeout) clearTimeout(reconnectTimeout);
+        reconnectTimeout = setTimeout(() => {
+            reconnectTimeout = null;
+            startBot();
+        }, 5000);
+    }
+}
+
+function startHealthCheck() {
+    if (healthCheckInterval) {
+        return;
+    }
+    
+    healthCheckInterval = setInterval(async () => {
+        try {
+            await bot.telegram.getMe();
+        } catch (err) {
+            console.error('Ошибка проверки соединения:', err);
+            if (isRunning) {
+                console.log('Переподключение...');
+                isRunning = false;
+                try {
+                    await bot.stop();
+                } catch (e) {
+                    console.error('Ошибка при остановке:', e);
+                }
+                if (reconnectTimeout) clearTimeout(reconnectTimeout);
+                reconnectTimeout = setTimeout(() => {
+                    reconnectTimeout = null;
+                    startBot();
+                }, 5000);
+            }
+        }
+    }, 60000);
+}
+
+startBot();
