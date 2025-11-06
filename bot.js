@@ -222,10 +222,18 @@ bot.catch((err, ctx) => {
 });
 
 process.on('unhandledRejection', (reason, promise) => {
+    if (reason?.response?.error_code === 409) {
+        console.log('⚠️ Конфликт polling (409) - игнорирую, переподключение уже обработано');
+        return;
+    }
     console.error('Необработанное отклонение промиса:', reason);
 });
 
 process.on('uncaughtException', (error) => {
+    if (error.response?.error_code === 409) {
+        console.log('⚠️ Конфликт polling (409) - ожидание переподключения...');
+        return;
+    }
     console.error('Необработанное исключение:', error);
 });
 
@@ -234,7 +242,15 @@ process.once('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
 async function gracefulShutdown(signal) {
     console.log(`Получен сигнал ${signal}, останавливаю бота...`);
+    isRunning = false;
+    if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout);
+        reconnectTimeout = null;
+    }
     try {
+        if (bot.telegram.webhookReply) {
+            await bot.telegram.deleteWebhook({ drop_pending_updates: true });
+        }
         await bot.stop(signal);
         console.log('✅ Бот остановлен');
         process.exit(0);
@@ -255,6 +271,7 @@ async function startBot() {
     }
 
     try {
+        await bot.telegram.deleteWebhook({ drop_pending_updates: true });
         await bot.launch();
         isRunning = true;
         console.log('✅ Бот запущен. Жми /start в Telegram.');
@@ -264,13 +281,23 @@ async function startBot() {
             startHealthCheck();
         }
     } catch (err) {
-        console.error('Ошибка при запуске бота:', err);
         isRunning = false;
-        if (reconnectTimeout) clearTimeout(reconnectTimeout);
-        reconnectTimeout = setTimeout(() => {
-            reconnectTimeout = null;
-            startBot();
-        }, 5000);
+        
+        if (err.response?.error_code === 409) {
+            console.log('⚠️ Конфликт: другой экземпляр бота запущен. Ожидание 15 секунд...');
+            if (reconnectTimeout) clearTimeout(reconnectTimeout);
+            reconnectTimeout = setTimeout(() => {
+                reconnectTimeout = null;
+                startBot();
+            }, 15000);
+        } else {
+            console.error('Ошибка при запуске бота:', err);
+            if (reconnectTimeout) clearTimeout(reconnectTimeout);
+            reconnectTimeout = setTimeout(() => {
+                reconnectTimeout = null;
+                startBot();
+            }, 5000);
+        }
     }
 }
 
@@ -283,20 +310,28 @@ function startHealthCheck() {
         try {
             await bot.telegram.getMe();
         } catch (err) {
-            console.error('Ошибка проверки соединения:', err);
+            if (err.response?.error_code === 409) {
+                console.log('⚠️ Конфликт polling обнаружен, переподключение...');
+            } else {
+                console.error('Ошибка проверки соединения:', err);
+            }
+            
             if (isRunning) {
                 console.log('Переподключение...');
                 isRunning = false;
                 try {
                     await bot.stop();
                 } catch (e) {
-                    console.error('Ошибка при остановке:', e);
+                    if (e.response?.error_code !== 409) {
+                        console.error('Ошибка при остановке:', e);
+                    }
                 }
                 if (reconnectTimeout) clearTimeout(reconnectTimeout);
+                const delay = err.response?.error_code === 409 ? 15000 : 5000;
                 reconnectTimeout = setTimeout(() => {
                     reconnectTimeout = null;
                     startBot();
-                }, 5000);
+                }, delay);
             }
         }
     }, 60000);
