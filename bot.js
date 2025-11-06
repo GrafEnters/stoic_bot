@@ -276,7 +276,6 @@ async function startBot() {
         isRunning = true;
         console.log('✅ Бот запущен. Жми /start в Telegram.');
         
-        startKeepAliveServer();
         if (!healthCheckInterval) {
             startHealthCheck();
         }
@@ -337,4 +336,5 @@ function startHealthCheck() {
     }, 60000);
 }
 
+startKeepAliveServer();
 startBot();
