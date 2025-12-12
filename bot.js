@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import {getWinnerStats, getAnswerStats, getRandomCustomAnswers} from './analytics.js';
 import {questions, sendQuestion, showResult, startQuiz} from "./quiz.js";
 import {existsSync, writeFileSync} from "node:fs";
-import {startKeepAliveServer} from "./keepalive.js";
 
 dotenv.config();
 
@@ -336,5 +335,4 @@ function startHealthCheck() {
     }, 60000);
 }
 
-startKeepAliveServer();
 startBot();

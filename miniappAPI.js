@@ -27,7 +27,7 @@ export function startMiniappAPI() {
     })();
 
     const app = express();
-    const PORT = process.env.MINIAPP_PORT || 3001;
+    const PORT = process.env.PORT || 3000;
 
     app.use(express.json());
 
@@ -143,10 +143,19 @@ export function startMiniappAPI() {
         res.status(200).json({ status: 'ok', service: 'miniapp-api' });
     });
 
+    app.get('/', (req, res) => {
+        res.send('Bot is running');
+    });
+
+    app.get('/health', (req, res) => {
+        res.status(200).json({ status: 'ok' });
+    });
+
     app.use('/miniapp', router);
 
     server = app.listen(PORT, '0.0.0.0', () => {
-        console.log(`📱 MiniApp API server listening on port ${PORT}`);
+        console.log(`🌐 Server listening on port ${PORT}`);
+        console.log(`📱 MiniApp API available at /miniapp`);
     });
 
     server.on('error', (err) => {
