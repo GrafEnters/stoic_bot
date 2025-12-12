@@ -108,6 +108,37 @@ export function startMiniappAPI() {
         }
     });
 
+    router.get('/tree', async (req, res) => {
+        try {
+            await db.read();
+            db.data ||= {players: {}};
+
+            const partsWithDates = [];
+
+            for (const [playerId, playerData] of Object.entries(db.data.players)) {
+                if (playerData.TreePartData) {
+                    const sortDate = playerData.createdAt || playerData.lastUpdated || '';
+                    partsWithDates.push({
+                        treePart: {
+                            ...playerData.TreePartData,
+                            PlayerId: playerId
+                        },
+                        sortDate: sortDate
+                    });
+                }
+            }
+
+            partsWithDates.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
+
+            const parts = partsWithDates.map(item => item.treePart);
+
+            res.json({ Parts: parts });
+        } catch (error) {
+            console.error('Ошибка при получении дерева:', error);
+            res.status(500).json({ error: 'Ошибка при получении дерева' });
+        }
+    });
+
     router.get('/health', (req, res) => {
         res.status(200).json({ status: 'ok', service: 'miniapp-api' });
     });
