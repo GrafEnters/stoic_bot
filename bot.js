@@ -5,17 +5,18 @@ import dotenv from 'dotenv';
 import {getWinnerStats, getAnswerStats, getRandomCustomAnswers} from './analytics.js';
 import {questions, sendQuestion, showResult, startQuiz} from "./quiz.js";
 import {existsSync, writeFileSync} from "node:fs";
+import {getRandomGreeting, isNewYearPeriod} from './greetings.js';
 
 dotenv.config();
 
 // База для результатов
 
 // создаём файл, если его нет
-if (!existsSync('./data/results.json')) {
-    writeFileSync('./data/results.json', JSON.stringify({results: []}, null, 2));
+if (!existsSync('/data/results.json')) {
+    writeFileSync('/data/results.json', JSON.stringify({results: []}, null, 2));
 }
 
-const adapter = new JSONFile('./data/results.json');
+const adapter = new JSONFile('/data/results.json');
 const db = new Low(adapter, {results: []});
 
 await db.read();
@@ -25,12 +26,24 @@ db.data ||= {results: []}; // теперь безопасно
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
+export {bot};
 export const sessions = new Map();
 
 // Старт
-bot.start((ctx) => {
-
+bot.start(async (ctx) => {
     console.log('✅ Бот start.');
+    
+    if (isNewYearPeriod()) {
+        const greeting = getRandomGreeting();
+        if (greeting) {
+            try {
+                await ctx.reply(greeting);
+            } catch (error) {
+                console.error('Ошибка при отправке поздравления:', error.message);
+            }
+        }
+    }
+    
     ctx.replyWithPhoto({source: 'data/avatars/Hello.jpg'}, {
         caption: 'Привет! 🦒\nХочешь узнать, какой ты философ?',
         reply_markup: Markup.inlineKeyboard(

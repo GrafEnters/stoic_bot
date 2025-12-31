@@ -2,7 +2,7 @@ import {Low} from 'lowdb';
 import {JSONFile} from 'lowdb/node';
 import {readFileSync} from 'node:fs';
 
-const adapter = new JSONFile('./data/results.json');
+const adapter = new JSONFile('/data/results.json');
 const db = new Low(adapter, {results: []});
 
 await db.read();
