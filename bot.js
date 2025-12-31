@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import {getWinnerStats, getAnswerStats, getRandomCustomAnswers} from './analytics.js';
 import {questions, sendQuestion, showResult, startQuiz} from "./quiz.js";
 import {existsSync, writeFileSync} from "node:fs";
-import {getRandomGreeting, isNewYearPeriod} from './greetings.js';
+import {getRandomGreeting, isNewYearPeriod, addUser} from './greetings.js';
 
 dotenv.config();
 
@@ -31,6 +31,7 @@ export const sessions = new Map();
 
 // Старт
 bot.start(async (ctx) => {
+    await addUser(ctx.chat.id);
     console.log('✅ Бот start.');
     
     if (isNewYearPeriod()) {
@@ -54,18 +55,21 @@ bot.start(async (ctx) => {
 });
 
 bot.action('already', async (ctx) => {
+    await addUser(ctx.chat.id);
     ctx.answerCbQuery();
     ctx.reply('Тем интереснее — сверим показания!');
     await startQuiz(ctx);
 });
 
 bot.action('start_quiz', async (ctx) => {
+    await addUser(ctx.chat.id);
     ctx.answerCbQuery();
     await startQuiz(ctx);
 });
 
 
-bot.action('show_stats', (ctx) => {
+bot.action('show_stats', async (ctx) => {
+    await addUser(ctx.chat.id);
     ctx.answerCbQuery();
 
     const winners = getWinnerStats();
@@ -95,6 +99,7 @@ bot.action('show_stats', (ctx) => {
 
 // Обработка ответов
 bot.on('callback_query', async (ctx) => {
+    await addUser(ctx.chat.id);
     console.log('callback_query');
     const session = sessions.get(ctx.chat.id);
     if (!session) return;
@@ -151,6 +156,7 @@ bot.on('callback_query', async (ctx) => {
 
 // Обработка текстовых ответов (для "Свой вариант")
 bot.on('text', async (ctx) => {
+    await addUser(ctx.chat.id);
     const session = sessions.get(ctx.chat.id);
     if (!session || !session.waitingCustomAnswer) return;
 
@@ -197,7 +203,8 @@ bot.on('text', async (ctx) => {
 });
 
 // Команда /stats
-bot.command('stats', (ctx) => {
+bot.command('stats', async (ctx) => {
+    await addUser(ctx.chat.id);
     console.log('Пользователь вызвал stats', ctx.from.username);
     const winners = getWinnerStats();
     const answers = getAnswerStats();
