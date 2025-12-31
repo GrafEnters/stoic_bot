@@ -14,11 +14,11 @@ export function startMiniappAPI() {
         return;
     }
 
-    if (!existsSync('./data/players.json')) {
-        writeFileSync('./data/players.json', JSON.stringify({players: {}}, null, 2));
+    if (!existsSync('/data/players.json')) {
+        writeFileSync('/data/players.json', JSON.stringify({players: {}}, null, 2));
     }
 
-    const adapter = new JSONFile('./data/players.json');
+    const adapter = new JSONFile('/data/players.json');
     const db = new Low(adapter, {players: {}});
 
     (async () => {
